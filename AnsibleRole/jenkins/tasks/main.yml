@@ -1,0 +1,5 @@
+---
+# importing task files
+- name: Include file to install softwares
+  import_tasks: install_jenkins.yml
+  # tags: jenkins

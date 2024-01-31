@@ -1,0 +1,48 @@
+---
+- name: Update APT cache
+  apt:
+    update_cache: yes
+
+# Installs jdk if not installed already
+- name: Ensure jdk is installed
+  apt:
+    name: default-jre
+    state: present
+
+
+- name: Add Jenkins apt key in system.
+  apt_key:
+    url: "{{ jenkins_repo_key_url }}"
+    state: present
+
+- name: Add Jenkins apt repository.
+  apt_repository:
+    repo: "{{ jenkins_repo_url }}"
+    state: present
+    update_cache: yes
+
+- name:  apt update
+  apt: 
+    update_cache: yes
+
+- name: Install jenkins 
+  apt:
+    name: jenkins
+    state: present 
+
+- name: Start service 
+  service:
+    name: jenkins 
+    state: started 
+    enabled: yes 
+
+- name: Check Jenkins service status
+  systemd:
+    name: jenkins
+    state: started
+  ignore_errors: yes
+  register: jenkins_service_status
+
+- name: Display Jenkins service status
+  debug:
+    var: jenkins_service_status
